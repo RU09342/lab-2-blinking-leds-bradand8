@@ -1,25 +1,48 @@
 # Multiple Blink
-Now that we have blinked at least 1 LED, what about blinking multiple LEDS at the same time? The minimum that you need to develop is blinking at least two LEDs at two different rates. Although I am not going to give you a speed, you should probably pick a rate which is visible to a standard human. I really hope that you take this further and perform some of the extra work for this part of the lab exercise.
+This is an expansion on the simple blink. Using the same concept, multiple LEDs are toggled in the same program but at different rates.
+
+## General Code
+Following the same format as simple blink, the noticible difference is this time there are two integers to allow two LEDs to toggle at different rates. Additionally, depending on the location of the second LED there is another P1DIR BTI to correspond with the second LED. And ofcourse there will now be two if statements instead of one. The code for the G2553 microprocessor is shown below.
+
+``` int main(void)
+{
+    volatile int i;         //integer value to delay first LED
+    volatile int j;         //integer value to delay second LED
+
+        WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+
+        P1SEL &= ~0x01;     //Selects Port 1 pins as general I/O
+        P1DIR |= (BIT0|BIT6);       //sets bit 0 of P1 and bit 6 of P1 as outputs
+
+        i=j=0;
+
+        for (;;){   //Initializes and empty loop for LED 1 and 2
+
+           i++;   //Increments i throughout loop
+           j++;   //Increments j throughout loop
+
+           if(i>10000) {     //As i increments, when it passes 10000 its value is reset and LED 1 is toggled
+               i=0;
+               P1OUT^= BIT0;
+           }
+           if(j>20000){    //As j increments, when it passes 20000 its value is reset and LED 2 is toggled
+               j=0;
+               P1OUT^= BIT6;
+           }
+        }
+}
+```
+
+# Differences among processors compared to the G2553
+* MSP430G2553      Code given above
+* MSP430F5529      Second LED corresponds to P4.7 not P1.6, P1DIR should be P4DIR and P1OUT should be P4OUT for the second LED.
+* MSP430FR2311     Second LED corresponds to P2.1 not P1.6, P1DIR should be P2DIR and P1OUT should be P2OUT for the second LED
+* MSP430FR5994     Second LED corresponds to P1.1 not P1.6
+* MSP430FR6989     Second LED corresponds to P9.7 not P1.6, P1OUT needs to be P9OUT for second if statement
+
+And ofcourse the FR microprocessors require an additional line of code to disable the GPIO resets.
+
+## Extra Work MORE LEDS!
+So far the codes to toggle the LEDs on the boards are simply controlling a particular pin. Therefore, essentially all pins can be used to blink an LED provided there are enough LEDs. Using a BreadBoard and 4 LEDs, 4 different pins were set up using the same method as the multi blink to form four differnt blinking speeds. This required that P1DIR be or-ed with 4 bits, and 4 for loops were made. An image of the setup is shown below.
 
 
-# YOU NEED TO CREATE THE FOLLOWING FOLDERS
-* MSP430G2553
-* MSP430F5529
-* MSP430FR2311
-* MSP430FR5994
-* MSP430FR6989
-
-## README
-Remember to replace this README with your README once you are ready to submit. I would recommend either making a copy of this file or taking a screen shot. There might be a copy of all of these README's in a folder on the top level depending on the exercise.
-
-## Extra Work
-When you take a look at the development boards, you are limited to what is built into the platform.
-
-### Even More LEDs
-Since up to this point you should have hopefully noticed that you are simply just controlling each pin on your processor. So... what is keeping you from putting an LED on each pin? Can you actually control the speed of each of these LEDs?
-
-### Patterned Lights
-If you can control a ton of LEDs, what is keeping you from having a little fun? Why not try and make something like a moving face or other moving object in lights. *CAUTION* I would only do this if you have finished the rest of the lab.
-
-### UART Pattern Control
-If you have been using UART, could you set which LEDs are on or off based off some UART command? Would you want to send an Array over UART such as [1 0 1 0] or would you want to send a byte that corresponds to the status? Can you not only say which LEDs are on, but also tell them to blink at a particular rate if they were on (so LED1 Blink every 100ms)?
