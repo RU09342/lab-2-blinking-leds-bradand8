@@ -1,29 +1,54 @@
-# Simple Blink
-For starters, you will need to blink one of the on-board LED's at a particular rate. It is up to you to determine what rate you want to blink it at, however it has to be symmetrical (50% Duty Cycle), meaning equal times on and off. You should attempt multiple different speeds before moving on to the next part of the lab.
+# Simple Blink 
+One of the most basic introductory programs for an MSP 430 microprocessor is to blink one of the built in LEDs. Must include the msp430 library for the code to work.
 
-## YOU NEED TO CREATE THE FOLLOWING FOLDERS
+``` #include <msp430.h> ```
+
+## Base Code
+Blinking an LED occurs by XORing the pin corresponding to the LED with a 1 on that bit. This switches the value of the LED pin between 0 and 1, hence turning the LED on and off and making it blink. All codes for the MSP430 processors require that the watchdog timer be stopped before implementing code. The Port 1 Select line of code will set Port 1 as a general Input/Output. This is not necessary as the port defaults as I/O. 
+
+``` P1SEl &= ~0x01;    ```
+
+Using the port direction command tells a particular pin on the port whether it will be an input or an output. 
+  1. PXDIR = 0,  port is an input
+  2. PXDIR = 1,  port is an output
+  
+  The output register, PXOUT, contains the value to be output from the port. The output register is used for the LED outputs.
+  The input register, PxIN, contains a value input to the port. The input register enables pullup/pulldown resistors for button inputs.
+  
+  
+  Below is a generic simple LED blink code for MSP430 microrocessors. Using a continuous loop and an arbitrary variable, the LED is toggled with a delay corresponding to the value of the variable. The loop decrements the variable from a set value and toggles the LED when the value becomes 0. A higher value for the variable equates to a longer delay, however the direct conversion to seconds is unknown at this time.
+  
+  ``` 
+  int main(void)
+{
+    volatile int i;         //integer value from internal counter
+
+    	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	
+    	P1SEL &= ~0x01;     //Selects P1 as general I/O
+    	P1DIR = 0x01;       //Sets bit 0 of P1 as the output
+    	P1OUT &= ~BIT0;     //Clears bit 0
+
+    	for (;;){   //Initializes a continuous loop
+
+    	    P1OUT ^= 0x01; //Toggles P1 bit 0 on and off by XORing bit 0 with a 1.
+
+    	    i = 8000;         //
+    	    do i--;           // Initiates a delay between toggling bit 0
+    	    while (i != 0);   //
+    	}
+}
+```
+
+## The LED simple Blink was tested successfully on the following processors
 * MSP430G2553
 * MSP430F5529
 * MSP430FR2311
 * MSP430FR5994
 * MSP430FR6989
 
-## How to not damage your processor
-Remember that your microprocessors are not hooked up to a nuclear power plant and they can only provide a finite amount of current and power to your attached devices. For each of your processors you should see what the maximum supply current is for the digital output pins and note it in your designs. Diodes are an interesting device where the V-I curve becomes almost a short circuit after only a couple volts. If you have a diode biased to operate at say 1 volt above its turn on voltage, you are going to be drawing quite a bit of amperage. 
+No changes were needed as all 5 processors have an LED at Pin 0 of Port 1.
 
-Before you actually begin this lab, take the time to mess around with the simulation below and understand what the importance of the series resistance is in the design. What does the resistance prevent from happening? Does having this resistance impact the performance of the LED?
+## Improvements
+Develop a way to convert the variable clock ticks to the unit of seconds to set a specific delay.
 
-<a href="http://everycircuit.com/circuit/5180823226810368">LED Current - EveryCircuit</a><br>
-<iframe width="560" height="360" src="http://everycircuit.com/embed/5180823226810368" frameborder="0"></iframe>
-
-## README
-Remember to replace this README with your README once you are ready to submit. I would recommend either making a copy of this file or taking a screen shot. There might be a copy of all of these README's in a folder on the top level depending on the exercise.
-
-## Extra Work
-Since this is so basic, there are a few things which might be interesting to implement.
-
-### UART Control: Single Character
-For starters, it would be interesting to tie in some of the UART code that was used before into this project. You might want to have the speed of the blinking controlled by a character sent over UART. For example, 's' could be a slow setting, 'm' could be medium speed, 'f' could be fast, and 'o' could be off.
-
-### UART Control: Rate Number
-Instead of depending on a character, what if we wanted to send a blinking period in milliseconds? So instead of 's', you could send something like '100' which corresponds to a 100 millisecond delay between the time the LED turns on again. Before you decide to tackle this, I would take a look at using a logic analyzer to see exactly what your computer is sending to your microprocessor. Also remember that the code previously provided will only service the UART Buffer one character at a time.
