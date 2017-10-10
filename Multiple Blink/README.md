@@ -43,7 +43,7 @@ Following the same format as simple blink, the noticible difference is this time
 And ofcourse the FR microprocessors require an additional line of code to disable the GPIO resets.
 
 ## Extra Work MORE LEDS!
-So far the codes to toggle the LEDs on the boards are simply controlling a particular pin. Therefore, essentially all pins can be used to blink an LED provided there are enough LEDs. Using a BreadBoard and 4 LEDs, 4 different pins were set up using the same method as the multi blink to form four differnt blinking speeds. This required that P1DIR be or-ed with 4 bits, and 4 for loops were made. An image of the setup is shown below.
+So far the codes to toggle the LEDs on the boards are simply controlling a particular pin. Therefore, essentially all pins can be used to blink an LED provided there are enough LEDs. Using a BreadBoard and 4 LEDs, 4 different pins were set up using the same method as the multi blink to form four differnt blinking speeds. This required that P1DIR be or-ed with 4 bits, and 4 for loops were made. An image of the setup is shown below. Note for safety, 1K Ohm resistors were used in the circuit for each LED.
 
 ![20171008_133024](https://user-images.githubusercontent.com/31701000/31370065-bbc18c0e-ad56-11e7-914b-26df9f80f44d.jpg)
 
