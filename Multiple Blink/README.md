@@ -45,4 +45,6 @@ And ofcourse the FR microprocessors require an additional line of code to disabl
 ## Extra Work MORE LEDS!
 So far the codes to toggle the LEDs on the boards are simply controlling a particular pin. Therefore, essentially all pins can be used to blink an LED provided there are enough LEDs. Using a BreadBoard and 4 LEDs, 4 different pins were set up using the same method as the multi blink to form four differnt blinking speeds. This required that P1DIR be or-ed with 4 bits, and 4 for loops were made. An image of the setup is shown below.
 
+![20171008_133024](https://user-images.githubusercontent.com/31701000/31370065-bbc18c0e-ad56-11e7-914b-26df9f80f44d.jpg)
 
+As can be seen above, wires connect from different pins on the MSP430 to the leds on the breadboard. The full code can be found in the MSP430MultiBlinkExtra folder.
