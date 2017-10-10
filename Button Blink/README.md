@@ -47,5 +47,6 @@ int main(void)
 * MSP430FR2311
 * MSP430FR5994
 * MSP430FR6989
+
 The only differences rely on the PXOUT, PXREN, and PXIN that correspond to the different ports and pins connected to each button for the various MSP430 microprocessors.
 
