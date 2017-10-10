@@ -47,7 +47,12 @@ Using the port direction command tells a particular pin on the port whether it w
 * MSP430FR5994
 * MSP430FR6989
 
-No changes were needed as all 5 processors have an LED at Pin 0 of Port 1.
+The only change necessary is for the microprocessors in the FR Family;  MSP430FR2311, MSP430FR5994, MSP430FR6989.
+Right after the the Watchdog timer is stopped, an additional line of code is necessary to prevent the processor from unwantedly reseting pins. The necessary line is shown below.
+
+```  PM5CTL0 &= ~LOCKLPM5;                   // Disable the GPIO power-on default high-impedance mode ```
+
+
 
 ## Improvements
 Develop a way to convert the variable clock ticks to the unit of seconds to set a specific delay.
